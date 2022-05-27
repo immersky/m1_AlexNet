@@ -1,6 +1,6 @@
 # m1_AlexNet
-using pytorch
 这里代码来源于网络流传的博客，原始出处已经无从考证
+
 数据集下载:https://pan.baidu.com/s/1rPZzQTE00r8lnc9Ott9j2Q?pwd=n5im 
 
 
