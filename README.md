@@ -1,7 +1,48 @@
 # m1_AlexNet
-这里代码来源于网络流传的博客，原始出处已经无从考证
+这里代码参考于网络流传的博客，原始出处已经无从考证
+代码里的网络结构:
+```
+#网络模型构建
+#注意：这里每层与原版参数不一样，输入为65x65，后续计算也不一样，仅仅结构相同
+class AlexNet(nn.Module):
+    def __init__(self,num_classes=2):                                       #分类数量,原论文为1000
+        super(AlexNet, self).__init__()
+        self.features=nn.Sequential(
+            nn.Conv2d(3,48, kernel_size=11),                                #48个卷积核 ,11x11x3，步长1，原论文为96,步长4
+            nn.ReLU(inplace=True),                                          #卷积后通过ReLU
+            nn.MaxPool2d(kernel_size=3,stride=2),                           #池化3x3,步长2
+            nn.Conv2d(48,128, kernel_size=5, padding=2),                    #5x5x48的128个卷积核，步长2
+            nn.ReLU(inplace=True),                                          #卷积后通过ReLU
+            nn.MaxPool2d(kernel_size=3,stride=2),                           #池化3x3,步长2
+            nn.Conv2d(128,192,kernel_size=3,stride=1,padding=1),            #3x3x128的192个卷积核
+            nn.ReLU(inplace=True),                                          #卷积后通过ReLU
+            nn.Conv2d(192,192,kernel_size=3,stride=1,padding=1),
+            nn.ReLU(inplace=True),
+            nn.Conv2d(192,128,kernel_size=3,stride=1,padding=1),
+            nn.ReLU(inplace=True),
+            nn.MaxPool2d(kernel_size=3,stride=2),                           #池化3x3，步长2，这时的输出已经为6x6x128
+        )
+        self.classifier=nn.Sequential(
+            nn.Linear(6*6*128,2048),                                        #全连接
+            nn.ReLU(inplace=True),                                          #通过ReLu
+            nn.Dropout(0.5),                                                #随机失活一半
+            nn.Linear(2048,2048),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.5),
+            nn.Linear(2048,num_classes),
+        )
+ 
+ 
+    def forward(self,x):
+        x=self.features(x)
+        x=torch.flatten(x,start_dim=1)                                      #展开，进入全连接层
+        x=self.classifier(x)
+ 
+        return x
 
-数据集下载:https://pan.baidu.com/s/1rPZzQTE00r8lnc9Ott9j2Q?pwd=n5im 
+```
+
+使用的数据集下载:https://pan.baidu.com/s/1rPZzQTE00r8lnc9Ott9j2Q?pwd=n5im 
 
 
 # ALexNet结构
